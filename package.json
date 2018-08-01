@@ -1,0 +1,31 @@
+{
+  "name": "party-barge-website",
+  "version": "0.1.0",
+  "description": "a website to help people sign up for party barge and for admins to manage signups",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "10.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dokun1/party-barge-website.git"
+  },
+  "author": "David Okun",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dokun1/party-barge-website/issues"
+  },
+  "homepage": "https://github.com/dokun1/party-barge-website#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "mongoose": "^5.2.4"
+  },
+  "devDependencies": {
+    "jasmine": "^3.1.0",
+    "request": "^2.87.0"
+  }
+}
