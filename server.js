@@ -6,7 +6,7 @@ var http = require('http').Server(app)
 var Cloudant = require('@cloudant/cloudant')
 var Attendee = require("./models/attendee.js")
 
-app.use(express.static('public'))
+app.use(express.static(__dirname))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:false}))
 
