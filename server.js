@@ -6,7 +6,7 @@ var http = require('http').Server(app)
 var Cloudant = require('@cloudant/cloudant')
 var Attendee = require("./models/attendee.js")
 
-app.use(express.static(__dirname))
+app.use(express.static('public'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:false}))
 
@@ -14,16 +14,37 @@ var username = process.env.cloudant_username || "nodejs"
 var password = process.env.cloudant_password
 var cloudant = Cloudant('http://localhost:5984')
 
-app.get('/check', (req, res) => {
-    var newAttendee = new Attendee("David", "Okun", "david@okun.io")
-    res.send(newAttendee)
+app.get('/attendeeCount', (req, res) => {
+    var db = cloudant.db.use('signup-testing')
+    db.fetch({}, (err, body) => {
+        if (err) {
+            res.sendStatus(500)
+        } else {
+            res.send({"count": body.total_rows})
+        }
+    })
+})
+
+app.get('/attendees', (req, res) => {
+    var db = cloudant.db.use('signup-testing')
+    db.fetch({}, (err, body) => {
+        if (err) {
+            res.sendStatus(500)
+        } else {
+            res.send(body.rows)
+        }
+    })
 })
 
 app.post('/newAttendee', (req, res) => {
     var newAttendee = new Attendee(req.body.firstName, req.body.lastName, req.body.emailAddress)
+    if (!newAttendee.firstName || !newAttendee.lastName || !newAttendee.emailAddress) {
+        res.sendStatus(406)
+        return console.error("Object not valid")
+    }
     console.log("body parsed: ", newAttendee)
     var db = cloudant.db.use('signup-testing')
-    db.insert(newAttendee, (err, body, headers) => {
+    db.insert(newAttendee, (err, body) => {
         if (err) {
             res.sendStatus(500)
             return console.error(err)

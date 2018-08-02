@@ -10,15 +10,45 @@
     <div class="jumbotron">
         <h1 class="display-6">Sign Up For Party Barge</h1>
         <br>
-        <input id="firstName" class="form-control" placeholder="First Name">
+        <h4 id="total-signups" class="total-signups"></h4>
         <br>
-        <input id="lastName" class="form-control" placeholder="Last Name">
+        <input id="first-name" class="form-control" placeholder="First Name">
         <br>
-        <input id="emailAddress" class="form-control" placeholder="Email Address">
+        <input id="last-name" class="form-control" placeholder="Last Name">
         <br>
-        <button id="signupButton" class="btn btn-success">Signup</button>
+        <input id="email-address" class="form-control" placeholder="Email Address">
+        <br>
+        <button id="signup-button" class="btn btn-success">Signup</button>
     </div>
 </div>
 
 <script>
+    $(() => {
+        $("#signup-button").click(() => {
+            var attendee = {firstName: $("#first-name").val(), lastName: $("#last-name").val(), emailAddress: $("#email-address").val()}
+            postNewAttendee(attendee)
+        })
+        getAttendeeNumber()
+    })
+
+    function getAttendeeNumber() {
+        $.get('http://localhost:3000/attendeeCount', (data) => {
+            document.getElementById('total-signups').innerHTML = data.count + ' people signed up so far.'
+            console.log(data.count)
+        })
+    }
+
+    function postNewAttendee(attendee) {
+        $.post('http://localhost:3000/newAttendee', attendee, (data, textStatus, xhr) => {
+            if (xhr.status != 200) {
+                console.error("incorrect response: ", status)
+            } else {
+                $('#first-name').val('')
+                $('#last-name').val('')
+                $('#email-address').val('')
+                getAttendeeNumber()
+                alert(attendee.firstName + ' ' + attendee.lastName + ' has signed up!')
+            }
+        })
+    }
 </script>
